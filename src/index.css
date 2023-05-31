@@ -27,6 +27,7 @@
   --tiles-bg: #e4e4e7;
   --tile-bg: #fafafa;
   --tile-text: #18181b;
+  --tile-border: #3f3f46;
 }
 
 /* @media (prefers-color-scheme: light) {
