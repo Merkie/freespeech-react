@@ -9,6 +9,7 @@ const Home = {
       subpageIndex: 0,
       text: "Greetings",
       folder: "greetings",
+      image: "greetings.png",
     },
     {
       x: 1,
@@ -16,6 +17,7 @@ const Home = {
       subpageIndex: 0,
       text: "Basic Needs",
       folder: "basic needs",
+      image: "basic-needs.webp",
     },
     {
       x: 2,
@@ -23,6 +25,7 @@ const Home = {
       subpageIndex: 0,
       text: "Feelings",
       folder: "feelings",
+      image: "feelings.png",
     },
     {
       x: 3,
@@ -30,6 +33,7 @@ const Home = {
       subpageIndex: 0,
       text: "People",
       folder: "people",
+      image: "people.webp",
     },
     {
       x: 4,
@@ -37,6 +41,7 @@ const Home = {
       subpageIndex: 0,
       text: "Places",
       folder: "places",
+      image: "places.webp",
     },
     {
       x: 5,
@@ -44,42 +49,49 @@ const Home = {
       subpageIndex: 0,
       text: "Help",
       folder: "help",
+      image: "help.png",
     },
     {
       x: 0,
       y: 1,
       subpageIndex: 0,
       text: "Yes",
+      image: "yes.png",
     },
     {
       x: 1,
       y: 1,
       subpageIndex: 0,
       text: "No",
+      image: "no.png",
     },
     {
       x: 2,
       y: 1,
       subpageIndex: 0,
       text: "More",
+      image: "more.png",
     },
     {
       x: 3,
       y: 1,
       subpageIndex: 0,
       text: "I want",
+      image: "i-want.png",
     },
     {
       x: 4,
       y: 1,
       subpageIndex: 0,
       text: "I don't want",
+      image: "i-dont-want.png",
     },
     {
       x: 5,
       y: 1,
       subpageIndex: 0,
       text: "I feel",
+      image: "i-feel.png",
     },
     {
       x: 0,
@@ -87,18 +99,21 @@ const Home = {
       subpageIndex: 0,
       text: "Food & Drinks",
       folder: "food and drinks",
+      image: "food-and-drinks.png",
     },
     {
       x: 1,
       y: 2,
       subpageIndex: 0,
       text: "Toilet",
+      image: "toilet.png",
     },
     {
       x: 2,
       y: 2,
       subpageIndex: 0,
       text: "Sleep",
+      image: "sleep.webp",
     },
     {
       x: 3,
@@ -106,6 +121,7 @@ const Home = {
       subpageIndex: 0,
       text: "Clothing",
       folder: "clothing",
+      image: "clothing.png",
     },
     {
       x: 4,
@@ -113,6 +129,7 @@ const Home = {
       subpageIndex: 0,
       text: "Personal Care",
       folder: "personal care",
+      image: "personal-care.png",
     },
     {
       x: 5,
@@ -120,6 +137,7 @@ const Home = {
       subpageIndex: 0,
       text: "Medical",
       folder: "medical",
+      image: "medical.png",
     },
     {
       x: 0,
@@ -127,6 +145,7 @@ const Home = {
       subpageIndex: 0,
       text: "Leisure",
       folder: "leisure",
+      image: "leisure.png",
     },
     {
       x: 1,
@@ -134,6 +153,7 @@ const Home = {
       subpageIndex: 0,
       text: "Social Interactions",
       folder: "social interactions",
+      image: "social-interactions.png",
     },
     {
       x: 2,
@@ -141,6 +161,7 @@ const Home = {
       subpageIndex: 0,
       text: "Emotions",
       folder: "emotions",
+      image: "emotions.png",
     },
     {
       x: 3,
@@ -148,6 +169,7 @@ const Home = {
       subpageIndex: 0,
       text: "Time & Calender",
       folder: "time and calender",
+      image: "time-and-calender.png",
     },
     {
       x: 4,
@@ -155,6 +177,7 @@ const Home = {
       subpageIndex: 0,
       text: "Weather",
       folder: "weather",
+      image: "weather.png",
     },
     {
       x: 5,
@@ -162,6 +185,7 @@ const Home = {
       subpageIndex: 0,
       text: "School",
       folder: "school",
+      image: "school.jpg",
     },
   ],
 };

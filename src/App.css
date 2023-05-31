@@ -28,15 +28,11 @@
   padding: 0px 5px;
   width: 100%;
   height: 100%;
+  font-size: 2vw;
 }
 
 .tile-wrapper {
-  width: 100%;
-  height: 100%;
-}
-
-.tile-wrapper > .no-img {
-  font-size: 2vw;
+  overflow: hidden;
 }
 
 .tile-wrapper > .img {
@@ -44,7 +40,6 @@
   flex-direction: column;
   grid-auto-columns: 1fr;
   grid-auto-rows: 1fr;
-  font-size: 1.1em;
 }
 
 .tile-wrapper > .img > img {
