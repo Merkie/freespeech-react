@@ -1,0 +1,56 @@
+.app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tiles-display {
+  flex: 1;
+  background: var(--tiles-bg);
+  overflow-y: auto;
+  position: relative;
+}
+
+.tile-grid {
+  display: grid;
+  gap: 5px;
+  padding: 5px;
+}
+
+.tile-grid > button {
+  background: var(--tile-bg);
+  color: var(--tile-text);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tile-grid > .no-img {
+  font-size: 2vw;
+}
+
+.tile-grid > button:active {
+  opacity: 0.5;
+}
+
+.bottom-nav {
+  display: flex;
+  padding: 5px;
+  background: var(--surface-bg);
+  color: var(--surface-text-secondary);
+}
+
+.bottom-nav > button {
+  flex: 1;
+  padding: 5px;
+  font-size: 1.1em;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.bottom-nav > .selected {
+  background: var(--surface-highlight);
+  color: var(--surface-text);
+}
