@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import TileGrid from "./TileGrid";
 import type { Tile } from "../utils/types";
 
-const TilesDisplay = (props: { pageTiles: Tile[] }) => {
+const TilesDisplay = (props: {
+  pageTiles: Tile[];
+  handlePageNavigation: (name: string) => void;
+}) => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
   const [sortedPageTiles, setSortedPageTiles] = useState<Tile[][]>([]);
@@ -46,12 +49,13 @@ const TilesDisplay = (props: { pageTiles: Tile[] }) => {
 
   return (
     <div ref={tilesDisplayRef} className="tiles-display">
-      {sortedPageTiles.map((subpageTiles, index) => (
+      {sortedPageTiles.map((subpageTiles) => (
         <TileGrid
           tiles={subpageTiles}
           columns={6}
           rows={4}
           tileGridHeight={tileGridHeight}
+          handlePageNavigation={props.handlePageNavigation}
         />
       ))}
     </div>

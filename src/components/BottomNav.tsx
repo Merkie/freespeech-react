@@ -1,12 +1,20 @@
 import { useState } from "react";
 import type { AppMode } from "../utils/types";
 
-const BottomNav = () => {
+const BottomNav = (props: { resetPageHistory: () => void }) => {
   const [activeAppMode, setActiveAppMode] = useState<AppMode>("home");
 
-  const dashboardButtons: { name: AppMode; disabled?: boolean }[] = [
+  const dashboardButtons: {
+    name: AppMode;
+    onClick?: () => void;
+    disabled?: boolean;
+  }[] = [
     {
       name: "home",
+      onClick: () => {
+        setActiveAppMode("home");
+        props.resetPageHistory();
+      },
     },
     {
       name: "edit",
@@ -23,7 +31,12 @@ const BottomNav = () => {
       {dashboardButtons.map((button) => (
         <button
           className={activeAppMode === button.name ? "selected" : ""}
-          onClick={() => setActiveAppMode(button.name as AppMode)}
+          onClick={() => {
+            setActiveAppMode(button.name as AppMode);
+            if (button.onClick) {
+              button.onClick();
+            }
+          }}
           disabled={button.disabled}
         >
           {button.name}
