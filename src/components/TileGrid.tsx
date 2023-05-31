@@ -7,6 +7,7 @@ const TileGrid = (props: {
   rows: number;
   tiles: ITile[];
   handlePageNavigation: (name: string) => void;
+  speak: (text: string) => void;
 }) => {
   return (
     <div
@@ -18,7 +19,12 @@ const TileGrid = (props: {
       className="tile-grid"
     >
       {props.tiles.map((tile) => (
-        <Tile handlePageNavigation={props.handlePageNavigation} {...tile} />
+        <Tile
+          handlePageNavigation={props.handlePageNavigation}
+          speak={props.speak}
+          key={JSON.stringify(tile)}
+          {...tile}
+        />
       ))}
     </div>
   );

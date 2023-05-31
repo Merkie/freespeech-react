@@ -5,6 +5,7 @@ import type { Tile } from "../utils/types";
 const TilesDisplay = (props: {
   pageTiles: Tile[];
   handlePageNavigation: (name: string) => void;
+  speak: (text: string) => void;
 }) => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
@@ -56,6 +57,8 @@ const TilesDisplay = (props: {
           rows={4}
           tileGridHeight={tileGridHeight}
           handlePageNavigation={props.handlePageNavigation}
+          speak={props.speak}
+          key={JSON.stringify(subpageTiles)}
         />
       ))}
     </div>

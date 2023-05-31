@@ -38,6 +38,7 @@ const BottomNav = (props: { resetPageHistory: () => void }) => {
             }
           }}
           disabled={button.disabled}
+          key={button.name}
         >
           {button.name}
         </button>
