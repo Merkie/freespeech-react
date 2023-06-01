@@ -1,6 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import TileGrid from "./TileGrid";
 import type { Tile } from "../utils/types";
+import useUpdateHeight from "../hooks/useUpdateHeight";
+import useTileSorting from "../hooks/useTileSorting";
+
+const GRID_COLUMNS = 6;
+const GRID_ROWS = 4;
 
 const TilesDisplay = (props: {
   pageTiles: Tile[];
@@ -9,52 +14,17 @@ const TilesDisplay = (props: {
 }) => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
-  const [sortedPageTiles, setSortedPageTiles] = useState<Tile[][]>([]);
+  const sortedPageTiles = useTileSorting(props.pageTiles);
 
-  useEffect(() => {
-    const newSortedTiles: Tile[][] = [];
-
-    props.pageTiles.forEach((tile) => {
-      if (newSortedTiles[tile.subpageIndex]) {
-        newSortedTiles[tile.subpageIndex] = [
-          ...newSortedTiles[tile.subpageIndex],
-          tile,
-        ];
-      } else {
-        newSortedTiles[tile.subpageIndex] = [tile];
-      }
-    });
-
-    setSortedPageTiles(newSortedTiles);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageTiles]); // remove sortedPageTiles from the dependency array
-
-  useEffect(() => {
-    const updateHeight = () => {
-      if (!tilesDisplayRef.current) return;
-
-      const height = (
-        tilesDisplayRef.current as unknown as { clientHeight: number }
-      ).clientHeight;
-      setTileGridHeight(height);
-    };
-
-    updateHeight(); // Initial height update
-
-    window.addEventListener("resize", updateHeight);
-
-    return () => {
-      window.removeEventListener("resize", updateHeight);
-    };
-  }, [tilesDisplayRef]);
+  useUpdateHeight(tilesDisplayRef, setTileGridHeight);
 
   return (
     <div ref={tilesDisplayRef} className="tiles-display">
       {sortedPageTiles.map((subpageTiles) => (
         <TileGrid
           tiles={subpageTiles}
-          columns={6}
-          rows={4}
+          columns={GRID_COLUMNS}
+          rows={GRID_ROWS}
           tileGridHeight={tileGridHeight}
           handlePageNavigation={props.handlePageNavigation}
           speak={props.speak}

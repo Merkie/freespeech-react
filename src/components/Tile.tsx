@@ -16,16 +16,14 @@ const Tile = (
   };
 
   return (
-    <div className="tile-wrapper">
-      <button
-        style={{ gridColumnStart: props.x + 1, gridRowStart: props.y + 1 }}
-        className={`tile ${props.image ? "img" : "no-img"}`}
-        onClick={handleInteraction}
-      >
-        <p>{props.text}</p>
-        {props.image && <img src={props.image} />}
-      </button>
-    </div>
+    <button
+      style={{ gridColumnStart: props.x + 1, gridRowStart: props.y + 1 }}
+      className={`tile ${props.image ? "img" : "no-img"}`}
+      onClick={handleInteraction}
+    >
+      <p>{props.text}</p>
+      {props.image && <img src={props.image} />}
+    </button>
   );
 };
 

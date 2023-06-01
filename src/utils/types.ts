@@ -20,3 +20,5 @@ export type Project = {
   rows: number;
   pages: Page[];
 };
+
+export type IModal = "" | "edit-sign-in" | "dashboard-sign-in";

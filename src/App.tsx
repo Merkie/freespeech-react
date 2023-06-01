@@ -1,55 +1,28 @@
-import "./App.css";
 import BottomNav from "./components/BottomNav";
 import TilesDisplay from "./components/TilesDisplay";
 import TilesTopNav from "./components/TilesTopNav";
 import english from "./utils/layouts/english";
-import { useState } from "react";
+import usePageNavigation from "./hooks/usePageNavigation";
+import useSpeech from "./hooks/useSpeech";
+import useModalManager from "./hooks/useModalManager";
 
 function App() {
-  const [pageHistory, setPageHistory] = useState<string[]>(["home"]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [speaking, setSpeaking] = useState(false);
+  const {
+    pageHistory,
+    pageIndex,
+    handlePageNavigation,
+    navigateBack,
+    navigateForwards,
+    resetPageHistory,
+  } = usePageNavigation("home");
 
-  const handlePageNavigation = (pageName: string) => {
-    if (pageIndex === 0) {
-      setPageHistory([pageName, ...pageHistory]);
-      return;
-    }
-    setPageHistory([
-      pageName,
-      ...pageHistory.slice(pageIndex, pageHistory.length),
-    ]);
-    setPageIndex(0);
-  };
+  const speak = useSpeech();
 
-  const navigateBack = () => {
-    if (pageIndex === pageHistory.length - 1) return;
-    setPageIndex(pageIndex + 1);
-  };
-
-  const navigateForwards = () => {
-    if (pageIndex === 0) return;
-    setPageIndex(pageIndex - 1);
-  };
-
-  const resetPageHistory = () => {
-    setPageHistory(["home"]);
-    setPageIndex(0);
-  };
-
-  const speak = (text: string) => {
-    if (speaking) return;
-    setSpeaking(true);
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "en-US";
-    window.speechSynthesis.speak(utterance);
-    utterance.onend = () => {
-      setSpeaking(false);
-    };
-  };
+  const { renderModal, setModal } = useModalManager();
 
   return (
     <div className="app">
+      {renderModal()}
       <TilesTopNav
         navigateBack={navigateBack}
         navigateForwards={navigateForwards}
@@ -64,7 +37,7 @@ function App() {
         handlePageNavigation={handlePageNavigation}
         speak={speak}
       />
-      <BottomNav resetPageHistory={resetPageHistory} />
+      <BottomNav setModal={setModal} resetPageHistory={resetPageHistory} />
     </div>
   );
 }

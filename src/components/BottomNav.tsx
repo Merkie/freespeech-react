@@ -1,7 +1,10 @@
 import { useState } from "react";
-import type { AppMode } from "../utils/types";
+import type { AppMode, IModal } from "../utils/types";
 
-const BottomNav = (props: { resetPageHistory: () => void }) => {
+const BottomNav = (props: {
+  resetPageHistory: () => void;
+  setModal: (modal: IModal) => void;
+}) => {
   const [activeAppMode, setActiveAppMode] = useState<AppMode>("home");
 
   const dashboardButtons: {
@@ -19,10 +22,16 @@ const BottomNav = (props: { resetPageHistory: () => void }) => {
     {
       name: "edit",
       disabled: true,
+      onClick: () => {
+        props.setModal("edit-sign-in");
+      },
     },
     {
       name: "dashboard",
       disabled: true,
+      onClick: () => {
+        props.setModal("dashboard-sign-in");
+      },
     },
   ];
 
@@ -32,12 +41,12 @@ const BottomNav = (props: { resetPageHistory: () => void }) => {
         <button
           className={activeAppMode === button.name ? "selected" : ""}
           onClick={() => {
-            setActiveAppMode(button.name as AppMode);
             if (button.onClick) {
               button.onClick();
             }
+            if (!button.disabled) setActiveAppMode(button.name as AppMode);
           }}
-          disabled={button.disabled}
+          style={{ opacity: button.disabled ? 0.5 : 1 }}
           key={button.name}
         >
           {button.name}
