@@ -34,6 +34,7 @@ const SignInModal = (props: { setOpenModal: (modal: IModal) => void }) => {
 
     setError("");
     setToken(token);
+    props.setOpenModal("");
   };
 
   return (
