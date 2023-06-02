@@ -21,6 +21,10 @@ export type Project = {
   pages: Page[];
 };
 
+export type ProjectEdits = {
+  pages: Page[];
+};
+
 export type IModal = "" | "dashboard-sign-in";
 
 export type EditModeTool =

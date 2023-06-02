@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AppMode, IModal } from "../utils/types";
 import { AppModeContext } from "../contexts/AppModeContext";
-import { PageContext } from "../contexts/PageContext";
+import { ProjectContext } from "../contexts/ProjectContext";
 
 const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
   const { activeAppMode, setActiveAppMode } = useContext(AppModeContext);
-  const { resetPageHistory } = useContext(PageContext);
+  const { resetPageHistory, mergeCurrentPageEdits, clearCurrentPageEdits } =
+    useContext(ProjectContext);
 
   const dashboardButtons: {
     name: AppMode;
@@ -40,13 +41,19 @@ const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
       {activeAppMode === "edit" ? (
         <>
           <button
-            onClick={() => setActiveAppMode("home")}
+            onClick={() => {
+              clearCurrentPageEdits();
+              setActiveAppMode("home");
+            }}
             className="btn-secondary"
           >
             Cancel
           </button>
           <button
-            onClick={() => setActiveAppMode("home")}
+            onClick={() => {
+              mergeCurrentPageEdits();
+              setActiveAppMode("home");
+            }}
             className="btn-primary"
           >
             Save changes

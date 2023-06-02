@@ -1,7 +1,7 @@
 import BottomNav from "./components/BottomNav";
 import useModalManager from "./hooks/useModalManager";
 import { AppModeProvider } from "./contexts/AppModeContext";
-import { PageProvider } from "./contexts/PageContext";
+import { ProjectProvider } from "./contexts/ProjectContext";
 import { SpeechProvider } from "./contexts/SpeechContext";
 import MainApplication from "./components/MainApplication";
 import { UserProvider } from "./contexts/UserProvider";
@@ -13,13 +13,13 @@ function App() {
     <UserProvider>
       <AppModeProvider>
         <SpeechProvider>
-          <PageProvider>
+          <ProjectProvider>
             <div className="app">
               {renderModal()}
               <MainApplication />
               <BottomNav setOpenModal={setOpenModal} />
             </div>
-          </PageProvider>
+          </ProjectProvider>
         </SpeechProvider>
       </AppModeProvider>
     </UserProvider>

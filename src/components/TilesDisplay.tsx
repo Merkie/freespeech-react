@@ -3,8 +3,8 @@ import TileGrid from "./TileGrid";
 import type { Tile } from "../utils/types";
 import useUpdateHeight from "../hooks/useUpdateHeight";
 import useTileSorting from "../hooks/useTileSorting";
-import english from "../utils/layouts/english";
-import { PageContext } from "../contexts/PageContext";
+import { ProjectContext } from "../contexts/ProjectContext";
+import { AppModeContext } from "../contexts/AppModeContext";
 
 const GRID_COLUMNS = 6;
 const GRID_ROWS = 4;
@@ -12,16 +12,16 @@ const GRID_ROWS = 4;
 const TilesDisplay = () => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
-  const { pageHistory, pageIndex } = useContext(PageContext);
+  const { activePage, getCurrentPageWithEdits } = useContext(ProjectContext);
+  const { activeAppMode } = useContext(AppModeContext);
 
-  const [pageTiles, setPageTiles] = useState<Tile[]>([]);
-  useEffect(() => {
-    setPageTiles(
-      english.pages.find((page) => page.name === pageHistory[pageIndex])
-        ?.tiles || []
-    );
-  }, [pageHistory, pageIndex]);
-  const sortedPageTiles = useTileSorting(pageTiles);
+  // const [pageTiles, setPageTiles] = useState<Tile[]>([]);
+
+  const sortedPageTiles = useTileSorting(
+    activeAppMode === "edit"
+      ? getCurrentPageWithEdits().tiles
+      : activePage.tiles
+  );
 
   useUpdateHeight(tilesDisplayRef, setTileGridHeight);
 

@@ -93,11 +93,19 @@ button {
   width: 100%;
   height: 100%;
   font-size: 2vw;
+  position: relative;
 }
 
 .tile > p {
   width: 100%;
   text-align: center;
+}
+
+.tile > .folder {
+  position: absolute;
+  bottom: 0px;
+  right: 5px;
+  font-size: 0.8em;
 }
 
 .img {

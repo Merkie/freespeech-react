@@ -6,17 +6,22 @@ export const AppModeContext = createContext<{
   setActiveAppMode: (mode: AppMode) => void;
   activeEditModeTool: EditModeTool;
   setActiveEditModeTool: (tool: EditModeTool) => void;
+  activeEditModeTile: string;
+  setActiveEditModeTile: (tile: string) => void;
 }>({
   activeAppMode: "home",
   setActiveAppMode: () => null,
   activeEditModeTool: "text",
   setActiveEditModeTool: () => null,
+  activeEditModeTile: "",
+  setActiveEditModeTile: () => null,
 });
 
 export const AppModeProvider = ({ children }: { children: ReactElement }) => {
   const [activeAppMode, setActiveAppMode] = useState<AppMode>("home");
   const [activeEditModeTool, setActiveEditModeTool] =
     useState<EditModeTool>("text");
+  const [activeEditModeTile, setActiveEditModeTile] = useState<string>("");
 
   return (
     <AppModeContext.Provider
@@ -25,6 +30,8 @@ export const AppModeProvider = ({ children }: { children: ReactElement }) => {
         setActiveAppMode,
         activeEditModeTool,
         setActiveEditModeTool,
+        activeEditModeTile,
+        setActiveEditModeTile,
       }}
     >
       {children}

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function usePageNavigation(initialPage: string) {
   const [pageHistory, setPageHistory] = useState<string[]>([initialPage]);
   const [pageIndex, setPageIndex] = useState(0);
+  const [canNavigateBack, setCanNavigateBack] = useState<boolean>(false);
+  const [canNavigateForwards, setCanNavigateForwards] =
+    useState<boolean>(false);
 
   const handlePageNavigation = (pageName: string) => {
     if (pageIndex === 0) {
@@ -31,6 +34,11 @@ function usePageNavigation(initialPage: string) {
     setPageIndex(0);
   };
 
+  useEffect(() => {
+    setCanNavigateBack(pageIndex === pageHistory.length - 1);
+    setCanNavigateForwards(pageIndex === 0);
+  }, [pageIndex, pageHistory]);
+
   return {
     pageHistory,
     pageIndex,
@@ -38,6 +46,8 @@ function usePageNavigation(initialPage: string) {
     navigateBack,
     navigateForwards,
     resetPageHistory,
+    canNavigateBack,
+    canNavigateForwards,
   };
 }
 
