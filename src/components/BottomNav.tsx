@@ -3,7 +3,7 @@ import { AppMode, IModal } from "../utils/types";
 import { AppModeContext } from "../contexts/AppModeContext";
 import { PageContext } from "../contexts/PageContext";
 
-const BottomNav = (props: { setModal: (modal: IModal) => void }) => {
+const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
   const { activeAppMode, setActiveAppMode } = useContext(AppModeContext);
   const { resetPageHistory } = useContext(PageContext);
 
@@ -30,7 +30,7 @@ const BottomNav = (props: { setModal: (modal: IModal) => void }) => {
       name: "dashboard",
       disabled: true,
       onClick: () => {
-        props.setModal("dashboard-sign-in");
+        props.setOpenModal("dashboard-sign-in");
       },
     },
   ];

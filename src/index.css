@@ -50,6 +50,9 @@
   --primary: #2563eb;
   --primary-border: #3b82f6;
   --primary-text: #eff6ff;
+
+  --input-bg: #f4f4f5;
+  --input-border: #d4d4d8;
 }
 
 button:active {
@@ -224,6 +227,13 @@ button {
 .modal-content {
   padding: 20px 10px;
   color: var(--surface-text-secondary);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content > .error {
+  font-size: 0.9em;
+  margin-top: 5px;
 }
 
 .toolbar {
@@ -269,4 +279,13 @@ button {
 .edit-menu > p > span {
   font-weight: bold;
   text-transform: capitalize;
+}
+
+input {
+  background: var(--input-bg);
+  color: var(--surface-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 1em;
 }

@@ -4,22 +4,25 @@ import { AppModeProvider } from "./contexts/AppModeContext";
 import { PageProvider } from "./contexts/PageContext";
 import { SpeechProvider } from "./contexts/SpeechContext";
 import MainApplication from "./components/MainApplication";
+import { UserProvider } from "./contexts/UserProvider";
 
 function App() {
-  const { renderModal, setModal } = useModalManager();
+  const { renderModal, setOpenModal } = useModalManager();
 
   return (
-    <AppModeProvider>
-      <SpeechProvider>
-        <PageProvider>
-          <div className="app">
-            {renderModal()}
-            <MainApplication />
-            <BottomNav setModal={setModal} />
-          </div>
-        </PageProvider>
-      </SpeechProvider>
-    </AppModeProvider>
+    <UserProvider>
+      <AppModeProvider>
+        <SpeechProvider>
+          <PageProvider>
+            <div className="app">
+              {renderModal()}
+              <MainApplication />
+              <BottomNav setOpenModal={setOpenModal} />
+            </div>
+          </PageProvider>
+        </SpeechProvider>
+      </AppModeProvider>
+    </UserProvider>
   );
 }
 

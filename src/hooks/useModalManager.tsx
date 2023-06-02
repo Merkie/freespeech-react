@@ -1,32 +1,18 @@
 import { useState } from "react";
 import { IModal } from "../utils/types";
-import Modal from "../components/Modal";
+import SignInModal from "../components/SignInModal";
 
 export default function useModalManager() {
   const [openModal, setOpenModal] = useState<IModal>("");
 
-  const setModal = (modal: IModal) => {
-    setOpenModal(modal);
-  };
-
   const renderModal = () => {
     switch (openModal) {
       case "dashboard-sign-in":
-        return (
-          <Modal
-            title="You must be signed in"
-            content={<p>You need to be signed in to use the dashboard</p>}
-            buttons={[
-              { text: "Create account", style: "secondary" },
-              { text: "Sign in", style: "primary" },
-            ]}
-            setModal={setModal}
-          />
-        );
+        return <SignInModal setOpenModal={setOpenModal} />;
       default:
         return null;
     }
   };
 
-  return { renderModal, setModal };
+  return { renderModal, setOpenModal };
 }
