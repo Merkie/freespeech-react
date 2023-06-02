@@ -1,11 +1,11 @@
-import { useState } from "react";
-import type { AppMode, IModal } from "../utils/types";
+import { useContext } from "react";
+import { AppMode, IModal } from "../utils/types";
+import { AppModeContext } from "../contexts/AppModeContext";
+import { PageContext } from "../contexts/PageContext";
 
-const BottomNav = (props: {
-  resetPageHistory: () => void;
-  setModal: (modal: IModal) => void;
-}) => {
-  const [activeAppMode, setActiveAppMode] = useState<AppMode>("home");
+const BottomNav = (props: { setModal: (modal: IModal) => void }) => {
+  const { activeAppMode, setActiveAppMode } = useContext(AppModeContext);
+  const { resetPageHistory } = useContext(PageContext);
 
   const dashboardButtons: {
     name: AppMode;
@@ -16,14 +16,14 @@ const BottomNav = (props: {
       name: "home",
       onClick: () => {
         setActiveAppMode("home");
-        props.resetPageHistory();
+        resetPageHistory();
       },
     },
     {
       name: "edit",
-      disabled: true,
+
       onClick: () => {
-        props.setModal("edit-sign-in");
+        setActiveAppMode("edit");
       },
     },
     {

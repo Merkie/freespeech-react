@@ -21,4 +21,4 @@ export type Project = {
   pages: Page[];
 };
 
-export type IModal = "" | "edit-sign-in" | "dashboard-sign-in";
+export type IModal = "" | "dashboard-sign-in";

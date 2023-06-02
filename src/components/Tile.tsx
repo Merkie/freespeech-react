@@ -1,16 +1,17 @@
+import { PageContext } from "../contexts/PageContext";
+import { SpeechContext } from "../contexts/SpeechContext";
 import { Tile } from "../utils/types";
+import { useContext } from "react";
 
-const Tile = (
-  props: Tile & {
-    handlePageNavigation: (name: string) => void;
-    speak: (text: string) => void;
-  }
-) => {
+const Tile = (props: Tile) => {
+  const { handlePageNavigation } = useContext(PageContext);
+  const { speak } = useContext(SpeechContext);
+
   const handleInteraction = () => {
     if (props.folder) {
-      props.handlePageNavigation(props.folder);
+      handlePageNavigation(props.folder);
     } else {
-      props.speak(props.text);
+      speak(props.text);
       console.log(props.text);
     }
   };

@@ -1,24 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const useUpdateHeight = (
   ref: React.RefObject<HTMLElement>,
   setHeight: (height: number) => void
 ) => {
+  const observerRef = useRef<ResizeObserver | null>(null);
+
   useEffect(() => {
-    const updateHeight = () => {
+    const updateHeight = (entries: ResizeObserverEntry[]) => {
       if (!ref.current) return;
 
-      const height = (ref.current as unknown as { clientHeight: number })
-        .clientHeight;
+      const { height } = entries[0].contentRect;
       setHeight(height);
     };
 
-    updateHeight(); // Initial height update
+    if (ref.current) {
+      observerRef.current = new ResizeObserver(updateHeight);
+      observerRef.current.observe(ref.current);
 
-    window.addEventListener("resize", updateHeight);
+      const domRect = ref.current.getBoundingClientRect();
+      updateHeight([
+        {
+          target: ref.current,
+          contentRect: domRect,
+          borderBoxSize: [
+            { inlineSize: domRect.width, blockSize: domRect.height },
+          ],
+          contentBoxSize: [
+            { inlineSize: domRect.width, blockSize: domRect.height },
+          ],
+          devicePixelContentBoxSize: [
+            { inlineSize: domRect.width, blockSize: domRect.height },
+          ],
+        },
+      ]);
+    }
 
     return () => {
-      window.removeEventListener("resize", updateHeight);
+      if (observerRef.current && ref.current) {
+        observerRef.current.unobserve(ref.current);
+        observerRef.current.disconnect();
+      }
     };
   }, [ref, setHeight]);
 };

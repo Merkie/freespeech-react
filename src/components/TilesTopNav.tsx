@@ -1,21 +1,20 @@
+import { useContext } from "react";
 import { ArrowRight, ArrowLeft } from "react-bootstrap-icons";
+import { PageContext } from "../contexts/PageContext";
 
-const TilesTopNav = (props: {
-  navigateBack: () => void;
-  navigateForwards: () => void;
-  pageIndex: number;
-  pageHistory: string[];
-}) => {
+const TilesTopNav = () => {
+  const { navigateBack, navigateForwards, pageIndex, pageHistory } =
+    useContext(PageContext);
   return (
     <div className="tiles-top-nav">
       <button
-        disabled={props.pageIndex === props.pageHistory.length - 1}
-        onClick={props.navigateBack}
+        disabled={pageIndex === pageHistory.length - 1}
+        onClick={navigateBack}
       >
         <ArrowLeft />
       </button>
-      <p>{props.pageHistory[props.pageIndex]}</p>
-      <button disabled={props.pageIndex === 0} onClick={props.navigateForwards}>
+      <p>{pageHistory[pageIndex]}</p>
+      <button disabled={pageIndex === 0} onClick={navigateForwards}>
         <ArrowRight />
       </button>
     </div>

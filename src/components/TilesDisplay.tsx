@@ -1,20 +1,27 @@
-import { useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import TileGrid from "./TileGrid";
 import type { Tile } from "../utils/types";
 import useUpdateHeight from "../hooks/useUpdateHeight";
 import useTileSorting from "../hooks/useTileSorting";
+import english from "../utils/layouts/english";
+import { PageContext } from "../contexts/PageContext";
 
 const GRID_COLUMNS = 6;
 const GRID_ROWS = 4;
 
-const TilesDisplay = (props: {
-  pageTiles: Tile[];
-  handlePageNavigation: (name: string) => void;
-  speak: (text: string) => void;
-}) => {
+const TilesDisplay = () => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
-  const sortedPageTiles = useTileSorting(props.pageTiles);
+  const { pageHistory, pageIndex } = useContext(PageContext);
+
+  const [pageTiles, setPageTiles] = useState<Tile[]>([]);
+  useEffect(() => {
+    setPageTiles(
+      english.pages.find((page) => page.name === pageHistory[pageIndex])
+        ?.tiles || []
+    );
+  }, [pageHistory, pageIndex]);
+  const sortedPageTiles = useTileSorting(pageTiles);
 
   useUpdateHeight(tilesDisplayRef, setTileGridHeight);
 
@@ -26,8 +33,6 @@ const TilesDisplay = (props: {
           columns={GRID_COLUMNS}
           rows={GRID_ROWS}
           tileGridHeight={tileGridHeight}
-          handlePageNavigation={props.handlePageNavigation}
-          speak={props.speak}
           key={JSON.stringify(subpageTiles)}
         />
       ))}
