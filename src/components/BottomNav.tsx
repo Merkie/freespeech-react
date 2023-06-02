@@ -37,21 +37,38 @@ const BottomNav = (props: { setModal: (modal: IModal) => void }) => {
 
   return (
     <div className="bottom-nav">
-      {dashboardButtons.map((button) => (
-        <button
-          className={activeAppMode === button.name ? "selected" : ""}
-          onClick={() => {
-            if (button.onClick) {
-              button.onClick();
-            }
-            if (!button.disabled) setActiveAppMode(button.name as AppMode);
-          }}
-          style={{ opacity: button.disabled ? 0.5 : 1 }}
-          key={button.name}
-        >
-          {button.name}
-        </button>
-      ))}
+      {activeAppMode === "edit" ? (
+        <>
+          <button
+            onClick={() => setActiveAppMode("home")}
+            className="btn-secondary"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => setActiveAppMode("home")}
+            className="btn-primary"
+          >
+            Save changes
+          </button>
+        </>
+      ) : (
+        dashboardButtons.map((button) => (
+          <button
+            className={activeAppMode === button.name ? "selected" : ""}
+            onClick={() => {
+              if (button.onClick) {
+                button.onClick();
+              }
+              if (!button.disabled) setActiveAppMode(button.name as AppMode);
+            }}
+            style={{ opacity: button.disabled ? 0.5 : 1 }}
+            key={button.name}
+          >
+            {button.name}
+          </button>
+        ))
+      )}
     </div>
   );
 };

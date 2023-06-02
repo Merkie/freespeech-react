@@ -22,3 +22,12 @@ export type Project = {
 };
 
 export type IModal = "" | "dashboard-sign-in";
+
+export type EditModeTool =
+  | "text"
+  | "image"
+  | "color"
+  | "move"
+  | "folder"
+  | "template"
+  | "delete";

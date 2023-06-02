@@ -1,3 +1,21 @@
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary-border);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.btn-secondary {
+  background: var(--surface-highlight);
+  color: var(--surface-text);
+  border: 1px solid var(--surface-border);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -97,6 +115,7 @@ button {
   padding: 5px;
   background: var(--surface-bg);
   color: var(--surface-text-secondary);
+  gap: 5px;
 }
 
 .bottom-nav > button {
@@ -107,6 +126,24 @@ button {
   border: none;
   border-radius: 5px;
   text-transform: capitalize;
+}
+
+.bottom-nav > .btn-secondary {
+  background: var(--surface-highlight);
+  color: var(--surface-text);
+  border: 1px solid var(--surface-border);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.bottom-nav > .btn-primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border: 1px solid var(--primary-border);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 1em;
 }
 
 .bottom-nav > .selected {
@@ -189,24 +226,6 @@ button {
   color: var(--surface-text-secondary);
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: var(--primary-text);
-  border: 1px solid var(--primary-border);
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 1em;
-}
-
-.btn-secondary {
-  background: var(--surface-highlight);
-  color: var(--surface-text);
-  border: 1px solid var(--surface-border);
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 1em;
-}
-
 .toolbar {
   background: var(--surface-bg);
   color: var(--surface-text-secondary);
@@ -226,4 +245,28 @@ button {
   border-radius: 5px;
   color: var(--surface-text);
   min-width: 150px;
+  text-transform: capitalize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar > .selected {
+  background: var(--surface-bg);
+  color: var(--surface-text-secondary);
+}
+
+.edit-menu {
+  background: var(--surface-bg);
+  color: var(--surface-text-secondary);
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.edit-menu > p > span {
+  font-weight: bold;
+  text-transform: capitalize;
 }
