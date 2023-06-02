@@ -4,7 +4,8 @@ import { AppModeContext } from "../contexts/AppModeContext";
 import { ProjectContext } from "../contexts/ProjectContext";
 
 const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
-  const { activeAppMode, setActiveAppMode } = useContext(AppModeContext);
+  const { activeAppMode, setActiveAppMode, setActiveEditModeTile } =
+    useContext(AppModeContext);
   const { resetPageHistory, mergeCurrentPageEdits, clearCurrentPageEdits } =
     useContext(ProjectContext);
 
@@ -52,6 +53,7 @@ const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
           <button
             onClick={() => {
               mergeCurrentPageEdits();
+              // clearCurrentPageEdits();
               setActiveAppMode("home");
             }}
             className="btn-primary"

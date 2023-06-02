@@ -1,14 +1,8 @@
 import { ReactElement, createContext, useEffect, useState } from "react";
-import {
-  AppMode,
-  EditModeTool,
-  Page,
-  Project,
-  ProjectEdits,
-  Tile,
-} from "../utils/types";
+import { Page, Project, ProjectEdits, Tile } from "../utils/types";
 import english from "../utils/layouts/english";
 import usePageNavigation from "../hooks/usePageNavigation";
+import { useLocalStorage } from "react-use";
 
 export const ProjectContext = createContext<{
   activeProject: Project;
@@ -17,7 +11,7 @@ export const ProjectContext = createContext<{
   navigateForwards: () => void;
   resetPageHistory: () => void;
   handlePageNavigation: (pageName: string) => void;
-  getCurrentPageWithEdits: () => Page;
+  activePageTilesWithEdits: Tile[];
   mergeCurrentPageEdits: () => void;
   clearCurrentPageEdits: () => void;
   addEdit: (tileToEdit: Tile) => void;
@@ -30,7 +24,7 @@ export const ProjectContext = createContext<{
   navigateForwards: () => null,
   resetPageHistory: () => null,
   handlePageNavigation: () => null,
-  getCurrentPageWithEdits: () => english.pages[0],
+  activePageTilesWithEdits: [],
   mergeCurrentPageEdits: () => null,
   clearCurrentPageEdits: () => null,
   addEdit: () => null,
@@ -39,21 +33,23 @@ export const ProjectContext = createContext<{
 });
 
 export const ProjectProvider = ({ children }: { children: ReactElement }) => {
-  const [activeProject, setActiveProject] = useState<Project>(
-    JSON.parse(
-      localStorage.getItem("freespeech-project") || JSON.stringify(english)
-    )
+  const [activeProject, setActiveProject] = useLocalStorage<Project>(
+    "freespeech-project",
+    english
   );
-  const [activePage, setActivePage] = useState<Page>(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    activeProject.pages.find((page) => page.name === "home")!
+  const [activePage, setActivePage] = useLocalStorage<Page>(
+    "freespeech-active-page",
+    activeProject
+      ? activeProject.pages.find((page) => page.name === "home")
+      : english.pages.find((page) => page.name === "home")
   );
-  const [projectEdits, setProjectEdits] = useState<ProjectEdits>(
-    JSON.parse(
-      localStorage.getItem("freespeech-project-edits") || '{"pages": []}'
-    )
+  const [projectEdits, setProjectEdits] = useLocalStorage<ProjectEdits>(
+    "freespeech-project-edits",
+    { pages: [] }
   );
-
+  const [activePageTilesWithEdits, setActivePageTilesWithEdits] = useState<
+    Tile[]
+  >([]);
   const {
     pageHistory,
     pageIndex,
@@ -65,39 +61,60 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
     canNavigateForwards,
   } = usePageNavigation("home");
 
-  const getCurrentPageWithEdits = () => {
+  useEffect(() => {
+    if (!activePage) throw new Error("No active page");
+    if (!projectEdits) throw new Error("No project edits");
+
+    let merged = [...activePage.tiles];
     const pageEdits = projectEdits.pages.find(
       (page) => page.name === activePage.name
     );
-    console.log(pageEdits);
-    return pageEdits
-      ? { ...activePage, tiles: [...activePage.tiles, ...pageEdits.tiles] }
-      : activePage;
-  };
+
+    pageEdits?.tiles.forEach((edit) => {
+      const existingTile = merged.find(
+        (tile) =>
+          tile.x === edit.x &&
+          tile.y === edit.y &&
+          tile.subpageIndex === edit.subpageIndex
+      );
+
+      if (existingTile) {
+        merged = merged.filter((tile) => tile !== existingTile);
+      }
+
+      merged.push(edit);
+    });
+
+    setActivePageTilesWithEdits(merged);
+  }, [activePage, projectEdits]);
 
   const mergeCurrentPageEdits = () => {
-    const mergedTiles = getCurrentPageWithEdits().tiles;
+    if (!activePage || !activeProject || !activePageTilesWithEdits) return;
+
     setActiveProject({
       ...activeProject,
-      pages: activeProject.pages.map((page) =>
-        page.name === activePage.name ? { ...page, tiles: mergedTiles } : page
-      ),
-    });
+      pages: (activeProject as Project).pages.map((page) =>
+        page.name === activePage.name
+          ? { ...page, tiles: activePageTilesWithEdits }
+          : page
+      ) as Page[],
+    } as Project);
   };
 
   const clearCurrentPageEdits = () => {
-    setProjectEdits({
-      ...projectEdits,
-      pages: {
-        ...projectEdits.pages,
-        [activePage.name]: { tiles: [] },
-      },
+    setProjectEdits((prev) => {
+      if (!prev) return prev;
+      const newPages = prev.pages.filter(
+        (page) => page.name !== activePage?.name
+      );
+      return { ...prev, pages: newPages };
     });
   };
 
   const addEdit = (tileToEdit: Tile) => {
     const pageName = pageHistory[pageIndex];
     setProjectEdits((previousEdits) => {
+      if (!previousEdits) return previousEdits;
       // Check if the page exists, if not, add it
       let pageToEdit = previousEdits.pages.find(
         (page) => page.name === pageName
@@ -131,33 +148,21 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("freespeech-project", JSON.stringify(activeProject));
-  }, [activeProject]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "freespeech-project-edits",
-      JSON.stringify(projectEdits)
-    );
-  }, [projectEdits]);
-
-  useEffect(() => {
     setActivePage(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      activeProject.pages.find((page) => page.name === pageHistory[pageIndex])!
+      activeProject?.pages.find((page) => page.name === pageHistory[pageIndex])
     );
-  }, [pageIndex, activeProject, pageHistory]);
+  }, [pageIndex, activeProject, pageHistory, setActivePage]);
 
   return (
     <ProjectContext.Provider
       value={{
-        activeProject,
-        activePage,
+        activeProject: activeProject as Project,
+        activePage: activePage as Page,
         navigateBack,
         navigateForwards,
         resetPageHistory,
         handlePageNavigation,
-        getCurrentPageWithEdits,
+        activePageTilesWithEdits,
         mergeCurrentPageEdits,
         clearCurrentPageEdits,
         addEdit,

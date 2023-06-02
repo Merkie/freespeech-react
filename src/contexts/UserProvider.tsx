@@ -1,5 +1,6 @@
-import { ReactElement, createContext, useEffect, useState } from "react";
+import { ReactElement, createContext, useEffect } from "react";
 import { User } from "../utils/types";
+import { useLocalStorage } from "react-use";
 
 export const UserContext = createContext<{
   token: string;
@@ -12,12 +13,8 @@ export const UserContext = createContext<{
 });
 
 export const UserProvider = ({ children }: { children: ReactElement }) => {
-  const [token, setToken] = useState(
-    localStorage.getItem("freespeech-token") || ""
-  );
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("freespeech-user") || "null")
-  );
+  const [token, setToken] = useLocalStorage("freespeech-token", "");
+  const [user, setUser] = useLocalStorage("freespeech-user", null);
 
   const fetchUser = async () => {
     const response = await fetch("https://api.freespeechaac.com/v1/user/me", {
@@ -34,21 +31,16 @@ export const UserProvider = ({ children }: { children: ReactElement }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem("freespeech-token", token);
-    fetchUser();
+    if (token) fetchUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
-
-  useEffect(() => {
-    localStorage.setItem("freespeech-user", JSON.stringify(user));
-  }, [user]);
 
   return (
     <UserContext.Provider
       value={{
-        token,
+        token: token as string,
         setToken,
-        user,
+        user: user as User,
       }}
     >
       {children}
