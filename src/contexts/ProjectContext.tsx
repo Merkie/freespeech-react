@@ -59,33 +59,6 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
     canNavigateForwards,
   } = usePageNavigation("home");
 
-  // const getTilesWithEdits = () => {
-  //   if (!activePage) throw new Error("No active page");
-  //   if (!projectEdits) throw new Error("No project edits");
-
-  //   let merged = [...activePage.tiles];
-  //   const pageEdits = projectEdits.pages.find(
-  //     (page) => page.name === activePage.name
-  //   );
-
-  //   pageEdits?.tiles.forEach((edit) => {
-  //     const existingTile = merged.find(
-  //       (tile) =>
-  //         tile.x === edit.x &&
-  //         tile.y === edit.y &&
-  //         tile.subpageIndex === edit.subpageIndex
-  //     );
-
-  //     if (existingTile) {
-  //       merged = merged.filter((tile) => tile !== existingTile);
-  //     }
-
-  //     merged.push(edit);
-  //   });
-
-  //   console.log("getTilesWithEdits() project edits", projectEdits);
-  // };
-
   const mergeCurrentPageEdits = () => {
     if (!activePage || !activeProject || !activePageTilesWithEdits) return;
 
@@ -110,70 +83,64 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
   };
 
   const addEdit = (tileToEdit: Tile) => {
+    if (!projectEdits) return projectEdits;
     const pageName = pageHistory[pageIndex];
-    setProjectEdits((previousEdits) => {
-      if (!previousEdits) return previousEdits;
-      // Check if the page exists, if not, add it
-      let pageToEdit = previousEdits.pages.find(
-        (page) => page.name === pageName
-      );
-      if (!pageToEdit) {
-        pageToEdit = { name: pageName, tiles: [] };
-        previousEdits.pages.push(pageToEdit);
-      }
 
-      // Check if the tile exists in the page
-      const existingTileIndex = pageToEdit.tiles.findIndex(
-        (tile) =>
-          tile.x === tileToEdit.x &&
-          tile.y === tileToEdit.y &&
-          tile.subpageIndex === tileToEdit.subpageIndex
-      );
+    // Check if the page exists, if not, add it
+    let pageToEdit = projectEdits.pages.find((page) => page.name === pageName);
+    if (!pageToEdit) {
+      pageToEdit = { name: pageName, tiles: [] };
+      projectEdits.pages.push(pageToEdit);
+    }
 
-      // If the tile exists, merge it with the new tile; otherwise add the new tile
-      if (existingTileIndex !== -1) {
-        const existingTile = pageToEdit.tiles[existingTileIndex];
-        pageToEdit.tiles[existingTileIndex] = {
-          ...existingTile,
-          ...tileToEdit,
-        };
-      } else {
-        pageToEdit.tiles.push(tileToEdit);
-      }
+    // Check if the tile exists in the page
+    const existingTileIndex = pageToEdit.tiles.findIndex(
+      (tile) =>
+        tile.x === tileToEdit.x &&
+        tile.y === tileToEdit.y &&
+        tile.subpageIndex === tileToEdit.subpageIndex
+    );
 
-      const updatedProjectEdits = {
-        ...previousEdits,
-        pages: previousEdits.pages.map((page) =>
-          page.name === pageToEdit?.name ? pageToEdit : page
-        ),
+    // If the tile exists, merge it with the new tile; otherwise add the new tile
+    if (existingTileIndex !== -1) {
+      const existingTile = pageToEdit.tiles[existingTileIndex];
+      pageToEdit.tiles[existingTileIndex] = {
+        ...existingTile,
+        ...tileToEdit,
       };
+    } else {
+      pageToEdit.tiles.push(tileToEdit);
+    }
 
-      // Calculate the updated tiles
-      let merged = [...activePage.tiles];
-      const pageEdits = updatedProjectEdits.pages.find(
-        (page) => page.name === activePage.name
+    setProjectEdits({
+      ...projectEdits,
+      pages: projectEdits.pages.map((page) =>
+        page.name === pageToEdit?.name ? pageToEdit : page
+      ),
+    });
+
+    // Merge the edits with the active page into its own state variable
+    let merged = [...activePage.tiles];
+    const pageEdits = projectEdits.pages.find(
+      (page) => page.name === activePage.name
+    );
+
+    pageEdits?.tiles.forEach((edit) => {
+      const existingTile = merged.find(
+        (tile) =>
+          tile.x === edit.x &&
+          tile.y === edit.y &&
+          tile.subpageIndex === edit.subpageIndex
       );
 
-      pageEdits?.tiles.forEach((edit) => {
-        const existingTile = merged.find(
-          (tile) =>
-            tile.x === edit.x &&
-            tile.y === edit.y &&
-            tile.subpageIndex === edit.subpageIndex
-        );
+      if (existingTile) {
+        merged = merged.filter((tile) => tile !== existingTile);
+      }
 
-        if (existingTile) {
-          merged = merged.filter((tile) => tile !== existingTile);
-        }
-
-        merged.push(edit);
-      });
-
-      // Set the updated tiles
-      setActivePageTilesWithEdits(merged);
-
-      return updatedProjectEdits;
+      merged.push(edit);
     });
+
+    setActivePageTilesWithEdits(merged);
   };
 
   useEffect(() => {

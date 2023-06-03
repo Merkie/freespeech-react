@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
-import { IModal } from "../utils/types";
 import Modal from "./Modal";
 import { UserContext } from "../contexts/UserContext";
+import { ModalContext } from "../contexts/ModalContext";
 
-const SignInModal = (props: { setOpenModal: (modal: IModal) => void }) => {
+const SignInModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const { setToken } = useContext(UserContext);
+  const { setModal } = useContext(ModalContext);
 
   const handleSignIn = async () => {
     const response = await fetch(
@@ -34,7 +35,7 @@ const SignInModal = (props: { setOpenModal: (modal: IModal) => void }) => {
 
     setError("");
     setToken(token);
-    props.setOpenModal("");
+    setModal("");
   };
 
   return (
@@ -58,7 +59,6 @@ const SignInModal = (props: { setOpenModal: (modal: IModal) => void }) => {
         </>
       }
       buttons={[{ text: "Sign in", style: "primary", onClick: handleSignIn }]}
-      setOpenModal={props.setOpenModal}
     />
   );
 };

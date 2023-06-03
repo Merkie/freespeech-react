@@ -9,18 +9,18 @@ import BottomNav from "./components/BottomNav";
 function App() {
   return (
     <AppModeProvider>
-      <ModalProvider>
-        <UserProvider>
-          <SpeechProvider>
-            <ProjectProvider>
+      <ProjectProvider>
+        <ModalProvider>
+          <UserProvider>
+            <SpeechProvider>
               <div className="app">
                 <MainApplication />
                 <BottomNav />
               </div>
-            </ProjectProvider>
-          </SpeechProvider>
-        </UserProvider>
-      </ModalProvider>
+            </SpeechProvider>
+          </UserProvider>
+        </ModalProvider>
+      </ProjectProvider>
     </AppModeProvider>
   );
 }
