@@ -25,6 +25,10 @@ const useTileEdit = ({
     ) {
       setEditsBegun(true);
     } else if (editsBegun) {
+      console.log("useTileEdit add edit call", {
+        ...props,
+        text: editedTileText,
+      });
       addEdit({ ...props, text: editedTileText });
       setEditsBegun(false);
     }

@@ -37,11 +37,9 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
     "freespeech-project",
     english
   );
-  const [activePage, setActivePage] = useLocalStorage<Page>(
-    "freespeech-active-page",
-    activeProject
-      ? activeProject.pages.find((page) => page.name === "home")
-      : english.pages.find((page) => page.name === "home")
+  const [activePage, setActivePage] = useState<Page>(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    activeProject!.pages.find((page) => page.name === "home")!
   );
   const [projectEdits, setProjectEdits] = useLocalStorage<ProjectEdits>(
     "freespeech-project-edits",
@@ -49,7 +47,7 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
   );
   const [activePageTilesWithEdits, setActivePageTilesWithEdits] = useState<
     Tile[]
-  >([]);
+  >(activePage.tiles);
   const {
     pageHistory,
     pageIndex,
@@ -61,32 +59,32 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
     canNavigateForwards,
   } = usePageNavigation("home");
 
-  useEffect(() => {
-    if (!activePage) throw new Error("No active page");
-    if (!projectEdits) throw new Error("No project edits");
+  // const getTilesWithEdits = () => {
+  //   if (!activePage) throw new Error("No active page");
+  //   if (!projectEdits) throw new Error("No project edits");
 
-    let merged = [...activePage.tiles];
-    const pageEdits = projectEdits.pages.find(
-      (page) => page.name === activePage.name
-    );
+  //   let merged = [...activePage.tiles];
+  //   const pageEdits = projectEdits.pages.find(
+  //     (page) => page.name === activePage.name
+  //   );
 
-    pageEdits?.tiles.forEach((edit) => {
-      const existingTile = merged.find(
-        (tile) =>
-          tile.x === edit.x &&
-          tile.y === edit.y &&
-          tile.subpageIndex === edit.subpageIndex
-      );
+  //   pageEdits?.tiles.forEach((edit) => {
+  //     const existingTile = merged.find(
+  //       (tile) =>
+  //         tile.x === edit.x &&
+  //         tile.y === edit.y &&
+  //         tile.subpageIndex === edit.subpageIndex
+  //     );
 
-      if (existingTile) {
-        merged = merged.filter((tile) => tile !== existingTile);
-      }
+  //     if (existingTile) {
+  //       merged = merged.filter((tile) => tile !== existingTile);
+  //     }
 
-      merged.push(edit);
-    });
+  //     merged.push(edit);
+  //   });
 
-    setActivePageTilesWithEdits(merged);
-  }, [activePage, projectEdits]);
+  //   console.log("getTilesWithEdits() project edits", projectEdits);
+  // };
 
   const mergeCurrentPageEdits = () => {
     if (!activePage || !activeProject || !activePageTilesWithEdits) return;
@@ -112,6 +110,7 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
   };
 
   const addEdit = (tileToEdit: Tile) => {
+    console.log("add edit called", tileToEdit);
     const pageName = pageHistory[pageIndex];
     setProjectEdits((previousEdits) => {
       if (!previousEdits) return previousEdits;
@@ -120,8 +119,10 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
         (page) => page.name === pageName
       );
       if (!pageToEdit) {
+        console.log("page to edit not found", pageName);
         pageToEdit = { name: pageName, tiles: [] };
         previousEdits.pages.push(pageToEdit);
+        console.log("page to edit added", pageToEdit, previousEdits);
       }
 
       // Check if the tile exists in the page
@@ -141,23 +142,58 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
         };
       } else {
         pageToEdit.tiles.push(tileToEdit);
+        console.log("tile added", tileToEdit, pageToEdit);
       }
 
-      return { ...previousEdits };
+      const updatedProjectEdits = {
+        ...previousEdits,
+        pages: previousEdits.pages.map((page) =>
+          page.name === pageToEdit?.name ? pageToEdit : page
+        ),
+      };
+
+      // Calculate the updated tiles
+      let merged = [...activePage.tiles];
+      const pageEdits = updatedProjectEdits.pages.find(
+        (page) => page.name === activePage.name
+      );
+
+      pageEdits?.tiles.forEach((edit) => {
+        const existingTile = merged.find(
+          (tile) =>
+            tile.x === edit.x &&
+            tile.y === edit.y &&
+            tile.subpageIndex === edit.subpageIndex
+        );
+
+        if (existingTile) {
+          merged = merged.filter((tile) => tile !== existingTile);
+        }
+
+        merged.push(edit);
+      });
+
+      // Set the updated tiles
+      setActivePageTilesWithEdits(merged);
+
+      return updatedProjectEdits;
     });
   };
 
   useEffect(() => {
-    setActivePage(
-      activeProject?.pages.find((page) => page.name === pageHistory[pageIndex])
+    if (!activeProject) return;
+    const page = activeProject.pages.find(
+      (page) => page.name === pageHistory[pageIndex]
     );
+    if (!page) return;
+    setActivePage(page);
   }, [pageIndex, activeProject, pageHistory, setActivePage]);
 
   return (
     <ProjectContext.Provider
       value={{
         activeProject: activeProject as Project,
-        activePage: activePage as Page,
+        activePage,
         navigateBack,
         navigateForwards,
         resetPageHistory,

@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { IModal } from "../utils/types";
 import Modal from "./Modal";
-import { UserContext } from "../contexts/UserProvider";
+import { UserContext } from "../contexts/UserContext";
 
 const SignInModal = (props: { setOpenModal: (modal: IModal) => void }) => {
   const [email, setEmail] = useState("");

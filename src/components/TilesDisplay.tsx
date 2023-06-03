@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import TileGrid from "./TileGrid";
 import useUpdateHeight from "../hooks/useUpdateHeight";
 import useTileSorting from "../hooks/useTileSorting";
@@ -22,6 +22,7 @@ const TilesDisplay = () => {
 
   return (
     <div ref={tilesDisplayRef} className="tiles-display">
+      {/* <pre>{JSON.stringify(activePageTilesWithEdits)}</pre> */}
       {sortedPageTiles.map((subpageTiles) => (
         <TileGrid
           tiles={subpageTiles}

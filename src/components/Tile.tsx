@@ -53,8 +53,8 @@ const Tile: React.FC<ITile> = (props) => {
         <input
           type="text"
           value={editedTileText}
-          onChange={(e) => {
-            setEditedTileText(e.target.value);
+          onInput={(e) => {
+            setEditedTileText((e.target as unknown as { value: string }).value);
           }}
         />
       ) : (

@@ -1,13 +1,15 @@
 import { useContext } from "react";
-import { AppMode, IModal } from "../utils/types";
+import { AppMode } from "../utils/types";
 import { AppModeContext } from "../contexts/AppModeContext";
 import { ProjectContext } from "../contexts/ProjectContext";
+import { ModalContext } from "../contexts/ModalContext";
 
-const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
+const BottomNav = () => {
   const { activeAppMode, setActiveAppMode, setActiveEditModeTile } =
     useContext(AppModeContext);
   const { resetPageHistory, mergeCurrentPageEdits, clearCurrentPageEdits } =
     useContext(ProjectContext);
+  const { setModal } = useContext(ModalContext);
 
   const dashboardButtons: {
     name: AppMode;
@@ -32,7 +34,7 @@ const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
       name: "dashboard",
       disabled: true,
       onClick: () => {
-        props.setOpenModal("dashboard-sign-in");
+        setModal("dashboard-sign-in");
       },
     },
   ];
@@ -51,9 +53,11 @@ const BottomNav = (props: { setOpenModal: (modal: IModal) => void }) => {
             Cancel
           </button>
           <button
-            onClick={() => {
+            onClick={async () => {
+              setActiveEditModeTile("");
+
               mergeCurrentPageEdits();
-              // clearCurrentPageEdits();
+
               setActiveAppMode("home");
             }}
             className="btn-primary"

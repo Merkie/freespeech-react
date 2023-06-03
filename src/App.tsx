@@ -1,28 +1,27 @@
-import BottomNav from "./components/BottomNav";
-import useModalManager from "./hooks/useModalManager";
 import { AppModeProvider } from "./contexts/AppModeContext";
 import { ProjectProvider } from "./contexts/ProjectContext";
 import { SpeechProvider } from "./contexts/SpeechContext";
+import { UserProvider } from "./contexts/UserContext";
+import { ModalProvider } from "./contexts/ModalContext";
 import MainApplication from "./components/MainApplication";
-import { UserProvider } from "./contexts/UserProvider";
+import BottomNav from "./components/BottomNav";
 
 function App() {
-  const { renderModal, setOpenModal } = useModalManager();
-
   return (
-    <UserProvider>
-      <AppModeProvider>
-        <SpeechProvider>
-          <ProjectProvider>
-            <div className="app">
-              {renderModal()}
-              <MainApplication />
-              <BottomNav setOpenModal={setOpenModal} />
-            </div>
-          </ProjectProvider>
-        </SpeechProvider>
-      </AppModeProvider>
-    </UserProvider>
+    <ModalProvider>
+      <UserProvider>
+        <AppModeProvider>
+          <SpeechProvider>
+            <ProjectProvider>
+              <div className="app">
+                <MainApplication />
+                <BottomNav />
+              </div>
+            </ProjectProvider>
+          </SpeechProvider>
+        </AppModeProvider>
+      </UserProvider>
+    </ModalProvider>
   );
 }
 
