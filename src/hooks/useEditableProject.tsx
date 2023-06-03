@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "react-use";
 import { Page, Project, ProjectEdits, Tile } from "../utils/types";
 
@@ -97,6 +97,10 @@ function useEditableProject(
 
     setActivePageTilesWithEdits(merged);
   };
+
+  useEffect(() => {
+    setActivePageTilesWithEdits(activePage.tiles);
+  }, [activePage]);
 
   return {
     mergeCurrentPageEdits,

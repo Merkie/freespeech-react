@@ -1,10 +1,9 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext } from "react";
 import { AppModeContext } from "../contexts/AppModeContext";
 import { ProjectContext } from "../contexts/ProjectContext";
 import { SpeechContext } from "../contexts/SpeechContext";
 import { Folder } from "react-bootstrap-icons";
 import type { Tile as ITile } from "../utils/types";
-// import useTileEdit from "../hooks/useTileEdit";
 import { ModalContext } from "../contexts/ModalContext";
 
 const Tile: React.FC<ITile> = (props) => {

@@ -5,13 +5,11 @@ import useTileSorting from "../hooks/useTileSorting";
 import { ProjectContext } from "../contexts/ProjectContext";
 import { AppModeContext } from "../contexts/AppModeContext";
 
-const GRID_COLUMNS = 6;
-const GRID_ROWS = 4;
-
 const TilesDisplay = () => {
   const tilesDisplayRef = useRef(null);
   const [tileGridHeight, setTileGridHeight] = useState(0);
-  const { activePage, activePageTilesWithEdits } = useContext(ProjectContext);
+  const { activePage, activePageTilesWithEdits, activeProject } =
+    useContext(ProjectContext);
   const { activeAppMode } = useContext(AppModeContext);
 
   const sortedPageTiles = useTileSorting(
@@ -22,12 +20,11 @@ const TilesDisplay = () => {
 
   return (
     <div ref={tilesDisplayRef} className="tiles-display">
-      {/* <pre>{JSON.stringify(activePageTilesWithEdits)}</pre> */}
       {sortedPageTiles.map((subpageTiles) => (
         <TileGrid
           tiles={subpageTiles}
-          columns={GRID_COLUMNS}
-          rows={GRID_ROWS}
+          columns={activeProject.columns}
+          rows={activeProject.rows}
           tileGridHeight={tileGridHeight}
           key={JSON.stringify(subpageTiles)}
         />
