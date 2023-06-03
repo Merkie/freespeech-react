@@ -3,20 +3,27 @@ import { Page, Project, ProjectEdits, Tile } from "../utils/types";
 import english from "../utils/layouts/english";
 import usePageNavigation from "../hooks/usePageNavigation";
 import { useLocalStorage } from "react-use";
+import useProject from "../hooks/useProject";
+import useEditableProject from "../hooks/useEditableProject";
 
 export const ProjectContext = createContext<{
+  // Project State
   activeProject: Project;
   activePage: Page;
+  // Page Navigation functions
   navigateBack: () => void;
   navigateForwards: () => void;
   resetPageHistory: () => void;
   handlePageNavigation: (pageName: string) => void;
-  activePageTilesWithEdits: Tile[];
+  // Page Navigation state
+  canNavigateBack: boolean;
+  canNavigateForwards: boolean;
+  // Edit functions
   mergeCurrentPageEdits: () => void;
   clearCurrentPageEdits: () => void;
   addEdit: (tileToEdit: Tile) => void;
-  canNavigateBack: boolean;
-  canNavigateForwards: boolean;
+  // Edit state
+  activePageTilesWithEdits: Tile[]; // Renders during edit mode
 }>({
   activeProject: english,
   activePage: english.pages[0],
@@ -24,30 +31,15 @@ export const ProjectContext = createContext<{
   navigateForwards: () => null,
   resetPageHistory: () => null,
   handlePageNavigation: () => null,
-  activePageTilesWithEdits: [],
+  canNavigateBack: false,
+  canNavigateForwards: false,
   mergeCurrentPageEdits: () => null,
   clearCurrentPageEdits: () => null,
   addEdit: () => null,
-  canNavigateBack: false,
-  canNavigateForwards: false,
+  activePageTilesWithEdits: [],
 });
 
 export const ProjectProvider = ({ children }: { children: ReactElement }) => {
-  const [activeProject, setActiveProject] = useLocalStorage<Project>(
-    "freespeech-project",
-    english
-  );
-  const [activePage, setActivePage] = useState<Page>(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    activeProject!.pages.find((page) => page.name === "home")!
-  );
-  const [projectEdits, setProjectEdits] = useLocalStorage<ProjectEdits>(
-    "freespeech-project-edits",
-    { pages: [] }
-  );
-  const [activePageTilesWithEdits, setActivePageTilesWithEdits] = useState<
-    Tile[]
-  >(activePage.tiles);
   const {
     pageHistory,
     pageIndex,
@@ -59,98 +51,16 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
     canNavigateForwards,
   } = usePageNavigation("home");
 
-  const mergeCurrentPageEdits = () => {
-    if (!activePage || !activeProject || !activePageTilesWithEdits) return;
+  const { activeProject, setActiveProject, activePage } = useProject(
+    pageHistory[pageIndex]
+  );
 
-    setActiveProject({
-      ...activeProject,
-      pages: (activeProject as Project).pages.map((page) =>
-        page.name === activePage.name
-          ? { ...page, tiles: activePageTilesWithEdits }
-          : page
-      ) as Page[],
-    } as Project);
-  };
-
-  const clearCurrentPageEdits = () => {
-    setProjectEdits((prev) => {
-      if (!prev) return prev;
-      const newPages = prev.pages.filter(
-        (page) => page.name !== activePage?.name
-      );
-      return { ...prev, pages: newPages };
-    });
-  };
-
-  const addEdit = (tileToEdit: Tile) => {
-    if (!projectEdits) return projectEdits;
-    const pageName = pageHistory[pageIndex];
-
-    // Check if the page exists, if not, add it
-    let pageToEdit = projectEdits.pages.find((page) => page.name === pageName);
-    if (!pageToEdit) {
-      pageToEdit = { name: pageName, tiles: [] };
-      projectEdits.pages.push(pageToEdit);
-    }
-
-    // Check if the tile exists in the page
-    const existingTileIndex = pageToEdit.tiles.findIndex(
-      (tile) =>
-        tile.x === tileToEdit.x &&
-        tile.y === tileToEdit.y &&
-        tile.subpageIndex === tileToEdit.subpageIndex
-    );
-
-    // If the tile exists, merge it with the new tile; otherwise add the new tile
-    if (existingTileIndex !== -1) {
-      const existingTile = pageToEdit.tiles[existingTileIndex];
-      pageToEdit.tiles[existingTileIndex] = {
-        ...existingTile,
-        ...tileToEdit,
-      };
-    } else {
-      pageToEdit.tiles.push(tileToEdit);
-    }
-
-    setProjectEdits({
-      ...projectEdits,
-      pages: projectEdits.pages.map((page) =>
-        page.name === pageToEdit?.name ? pageToEdit : page
-      ),
-    });
-
-    // Merge the edits with the active page into its own state variable
-    let merged = [...activePage.tiles];
-    const pageEdits = projectEdits.pages.find(
-      (page) => page.name === activePage.name
-    );
-
-    pageEdits?.tiles.forEach((edit) => {
-      const existingTile = merged.find(
-        (tile) =>
-          tile.x === edit.x &&
-          tile.y === edit.y &&
-          tile.subpageIndex === edit.subpageIndex
-      );
-
-      if (existingTile) {
-        merged = merged.filter((tile) => tile !== existingTile);
-      }
-
-      merged.push(edit);
-    });
-
-    setActivePageTilesWithEdits(merged);
-  };
-
-  useEffect(() => {
-    if (!activeProject) return;
-    const page = activeProject.pages.find(
-      (page) => page.name === pageHistory[pageIndex]
-    );
-    if (!page) return;
-    setActivePage(page);
-  }, [pageIndex, activeProject, pageHistory, setActivePage]);
+  const {
+    mergeCurrentPageEdits,
+    clearCurrentPageEdits,
+    activePageTilesWithEdits,
+    addEdit,
+  } = useEditableProject(activePage, activeProject, setActiveProject);
 
   return (
     <ProjectContext.Provider
@@ -161,12 +71,12 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
         navigateForwards,
         resetPageHistory,
         handlePageNavigation,
-        activePageTilesWithEdits,
+        canNavigateBack,
+        canNavigateForwards,
         mergeCurrentPageEdits,
         clearCurrentPageEdits,
         addEdit,
-        canNavigateBack,
-        canNavigateForwards,
+        activePageTilesWithEdits,
       }}
     >
       {children}

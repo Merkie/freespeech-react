@@ -9,7 +9,7 @@ export default function useModalManager() {
   const renderModal = () => {
     switch (openModal) {
       case "dashboard-sign-in":
-        return <SignInModal setOpenModal={setOpenModal} />;
+        return <SignInModal />;
       case "edit-tile-text":
         return <EditTileTextModal />;
       default:
