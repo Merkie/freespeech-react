@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IModal } from "../utils/types";
 import SignInModal from "../components/SignInModal";
+import EditTileTextModal from "../components/EditTileTextModal";
 
 export default function useModalManager() {
   const [openModal, setOpenModal] = useState<IModal>("");
@@ -9,6 +10,8 @@ export default function useModalManager() {
     switch (openModal) {
       case "dashboard-sign-in":
         return <SignInModal setOpenModal={setOpenModal} />;
+      case "edit-tile-text":
+        return <EditTileTextModal />;
       default:
         return null;
     }

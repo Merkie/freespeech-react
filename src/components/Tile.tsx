@@ -4,26 +4,17 @@ import { ProjectContext } from "../contexts/ProjectContext";
 import { SpeechContext } from "../contexts/SpeechContext";
 import { Folder } from "react-bootstrap-icons";
 import type { Tile as ITile } from "../utils/types";
-import useTileEdit from "../hooks/useTileEdit";
+// import useTileEdit from "../hooks/useTileEdit";
+import { ModalContext } from "../contexts/ModalContext";
 
 const Tile: React.FC<ITile> = (props) => {
-  const {
-    activeEditModeTile,
-    setActiveEditModeTile,
-    activeAppMode,
-    activeEditModeTool,
-  } = useContext(AppModeContext);
-  const { handlePageNavigation, addEdit } = useContext(ProjectContext);
+  const { setActiveEditModeTile, activeAppMode, activeEditModeTool } =
+    useContext(AppModeContext);
+  const { handlePageNavigation } = useContext(ProjectContext);
   const { speak } = useContext(SpeechContext);
-  const { editedTileText, setEditedTileText } = useTileEdit({
-    activeAppMode,
-    activeEditModeTool,
-    activeEditModeTile,
-    addEdit,
-    props,
-  });
+  const { setModal } = useContext(ModalContext);
 
-  const handleInteraction = useCallback(() => {
+  const handleInteraction = () => {
     if (activeAppMode === "home") {
       if (props.folder) {
         handlePageNavigation(props.folder);
@@ -32,14 +23,11 @@ const Tile: React.FC<ITile> = (props) => {
       }
     } else if (activeAppMode === "edit") {
       setActiveEditModeTile(`${props.x} ${props.y} ${props.subpageIndex}`);
+      if (activeEditModeTool === "text") {
+        setModal("edit-tile-text");
+      }
     }
-  }, [
-    activeAppMode,
-    props,
-    handlePageNavigation,
-    speak,
-    setActiveEditModeTile,
-  ]);
+  };
 
   return (
     <button
@@ -47,19 +35,7 @@ const Tile: React.FC<ITile> = (props) => {
       className={`tile ${props.image ? "img" : "no-img"}`}
       onClick={handleInteraction}
     >
-      {activeAppMode === "edit" &&
-      activeEditModeTool === "text" &&
-      activeEditModeTile === `${props.x} ${props.y} ${props.subpageIndex}` ? (
-        <input
-          type="text"
-          value={editedTileText}
-          onInput={(e) => {
-            setEditedTileText((e.target as unknown as { value: string }).value);
-          }}
-        />
-      ) : (
-        <p>{props.text}</p>
-      )}
+      <p>{props.text}</p>
       {props.image && <img src={props.image} />}
       {props.folder && (
         <div className="folder">

@@ -1,19 +1,19 @@
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { X } from "react-bootstrap-icons";
-import type { IModal } from "../utils/types";
+import { ModalContext } from "../contexts/ModalContext";
 
 const Modal = (props: {
   title: string;
   content: ReactElement;
   buttons: { text: string; style: string; onClick: () => void }[];
-  setOpenModal: (modal: IModal) => void;
 }) => {
+  const { setModal } = useContext(ModalContext);
   return (
     <div className="modal-wrapper">
       <div className="modal">
         <div className="modal-header">
           <p>{props.title}</p>
-          <button onClick={() => props.setOpenModal("")}>
+          <button onClick={() => setModal("")}>
             <X />
           </button>
         </div>

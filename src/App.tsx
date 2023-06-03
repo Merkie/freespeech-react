@@ -8,9 +8,9 @@ import BottomNav from "./components/BottomNav";
 
 function App() {
   return (
-    <ModalProvider>
-      <UserProvider>
-        <AppModeProvider>
+    <AppModeProvider>
+      <ModalProvider>
+        <UserProvider>
           <SpeechProvider>
             <ProjectProvider>
               <div className="app">
@@ -19,9 +19,9 @@ function App() {
               </div>
             </ProjectProvider>
           </SpeechProvider>
-        </AppModeProvider>
-      </UserProvider>
-    </ModalProvider>
+        </UserProvider>
+      </ModalProvider>
+    </AppModeProvider>
   );
 }
 

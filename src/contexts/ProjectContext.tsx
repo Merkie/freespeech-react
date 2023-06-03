@@ -110,7 +110,6 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
   };
 
   const addEdit = (tileToEdit: Tile) => {
-    console.log("add edit called", tileToEdit);
     const pageName = pageHistory[pageIndex];
     setProjectEdits((previousEdits) => {
       if (!previousEdits) return previousEdits;
@@ -119,10 +118,8 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
         (page) => page.name === pageName
       );
       if (!pageToEdit) {
-        console.log("page to edit not found", pageName);
         pageToEdit = { name: pageName, tiles: [] };
         previousEdits.pages.push(pageToEdit);
-        console.log("page to edit added", pageToEdit, previousEdits);
       }
 
       // Check if the tile exists in the page
@@ -142,7 +139,6 @@ export const ProjectProvider = ({ children }: { children: ReactElement }) => {
         };
       } else {
         pageToEdit.tiles.push(tileToEdit);
-        console.log("tile added", tileToEdit, pageToEdit);
       }
 
       const updatedProjectEdits = {

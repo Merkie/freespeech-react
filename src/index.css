@@ -208,6 +208,21 @@ button {
   max-width: 500px;
 }
 
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--surface-text);
+  font-size: 1em;
+  padding: 0px;
+  cursor: pointer;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.text-btn:hover {
+  text-decoration: underline;
+}
+
 .modal-header {
   display: flex;
   justify-content: space-between;

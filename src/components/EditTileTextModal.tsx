@@ -1,42 +1,55 @@
 import { useContext, useState } from "react";
-import { IModal } from "../utils/types";
 import Modal from "./Modal";
-import { UserContext } from "../contexts/UserContext";
+import { AppModeContext } from "../contexts/AppModeContext";
+import { ProjectContext } from "../contexts/ProjectContext";
 
-const EditTileTextModal = (props: {
-  setOpenModal: (modal: IModal) => void;
-}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const { setToken } = useContext(UserContext);
+const EditTileTextModal = () => {
+  const { activeEditModeTile } = useContext(AppModeContext);
+  const { activePage } = useContext(ProjectContext);
+  const [tileText, setTileText] = useState(
+    activePage.tiles.find(
+      (tile) =>
+        tile.x + "" === activeEditModeTile.split(" ")[0] &&
+        tile.y + "" === activeEditModeTile.split(" ")[1] &&
+        tile.subpageIndex + "" === activeEditModeTile.split(" ")[2]
+    )?.text
+  );
+  const [showMoreSettings, setShowMoreSettings] = useState(false);
 
   return (
     <Modal
-      title="You must be signed in"
+      title="Edit tile text"
       content={
         <>
           <p>Tile Text:</p>
           <input
             type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={tileText}
+            onChange={(e) => setTileText(e.target.value)}
           />
-          {/* <p>Password:</p>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error && <p className="error">{error}</p>} */}
+          {showMoreSettings ? (
+            <>
+              <p style={{ marginTop: "10px" }}>Tile Display Text:</p>
+              <input
+                type="text"
+                value={tileText}
+                onChange={(e) => setTileText(e.target.value)}
+              />
+            </>
+          ) : (
+            <button
+              onClick={() => setShowMoreSettings(true)}
+              className="text-btn"
+            >
+              Show more...
+            </button>
+          )}
         </>
       }
       buttons={[
         { text: "Cancel", style: "secondary", onClick: () => null },
         { text: "Save changes", style: "primary", onClick: () => null },
       ]}
-      setOpenModal={props.setOpenModal}
     />
   );
 };

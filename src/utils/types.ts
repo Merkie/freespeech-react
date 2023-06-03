@@ -25,7 +25,7 @@ export type ProjectEdits = {
   pages: Page[];
 };
 
-export type IModal = "" | "dashboard-sign-in";
+export type IModal = "" | "dashboard-sign-in" | "edit-tile-text";
 
 export type EditModeTool =
   | "text"
