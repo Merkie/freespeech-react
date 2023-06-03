@@ -7,6 +7,8 @@ export type Tile = {
   subpageIndex: number;
   image?: string;
   folder?: string;
+  color?: string;
+  deleted?: boolean;
 };
 
 export type Page = {

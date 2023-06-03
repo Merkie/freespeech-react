@@ -7,9 +7,13 @@ import type { Tile as ITile } from "../utils/types";
 import { ModalContext } from "../contexts/ModalContext";
 
 const Tile: React.FC<ITile> = (props) => {
-  const { setActiveEditModeTile, activeAppMode, activeEditModeTool } =
-    useContext(AppModeContext);
-  const { handlePageNavigation } = useContext(ProjectContext);
+  const {
+    setActiveEditModeTile,
+    activeAppMode,
+    activeEditModeTool,
+    selectedColor,
+  } = useContext(AppModeContext);
+  const { handlePageNavigation, addEdit } = useContext(ProjectContext);
   const { speak } = useContext(SpeechContext);
   const { setModal } = useContext(ModalContext);
 
@@ -24,6 +28,16 @@ const Tile: React.FC<ITile> = (props) => {
       setActiveEditModeTile(`${props.x} ${props.y} ${props.subpageIndex}`);
       if (activeEditModeTool === "text") {
         setModal("edit-tile-text");
+      } else if (activeEditModeTool === "color") {
+        addEdit({
+          ...props,
+          color: selectedColor,
+        });
+      } else if (activeEditModeTool === "delete") {
+        addEdit({
+          ...props,
+          deleted: true,
+        });
       }
     }
   };
@@ -31,7 +45,9 @@ const Tile: React.FC<ITile> = (props) => {
   return (
     <button
       style={{ gridColumnStart: props.x + 1, gridRowStart: props.y + 1 }}
-      className={`tile ${props.image ? "img" : "no-img"}`}
+      className={`tile ${props.color ? props.color : ""} ${
+        props.image ? "img" : "no-img"
+      }`}
       onClick={handleInteraction}
     >
       <p>{props.text}</p>

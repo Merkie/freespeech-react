@@ -8,6 +8,8 @@ export const AppModeContext = createContext<{
   setActiveEditModeTool: (tool: EditModeTool) => void;
   activeEditModeTile: string;
   setActiveEditModeTile: (tile: string) => void;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
 }>({
   activeAppMode: "home",
   setActiveAppMode: () => null,
@@ -15,6 +17,8 @@ export const AppModeContext = createContext<{
   setActiveEditModeTool: () => null,
   activeEditModeTile: "",
   setActiveEditModeTile: () => null,
+  selectedColor: "red",
+  setSelectedColor: () => null,
 });
 
 export const AppModeProvider = ({ children }: { children: ReactElement }) => {
@@ -22,6 +26,7 @@ export const AppModeProvider = ({ children }: { children: ReactElement }) => {
   const [activeEditModeTool, setActiveEditModeTool] =
     useState<EditModeTool>("text");
   const [activeEditModeTile, setActiveEditModeTile] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState("red");
 
   return (
     <AppModeContext.Provider
@@ -32,6 +37,8 @@ export const AppModeProvider = ({ children }: { children: ReactElement }) => {
         setActiveEditModeTool,
         activeEditModeTile,
         setActiveEditModeTile,
+        selectedColor,
+        setSelectedColor,
       }}
     >
       {children}

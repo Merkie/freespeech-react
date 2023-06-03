@@ -53,6 +53,34 @@
 
   --input-bg: #f4f4f5;
   --input-border: #d4d4d8;
+
+  --red-border: #ef4444;
+  --red-bg: #fee2e2;
+  --red-text: #991b1b;
+
+  --orange-border: #f97316;
+  --orange-bg: #ffedd5;
+  --orange-text: #9a3412;
+
+  --yellow-border: #eab308;
+  --yellow-bg: #fef9c3;
+  --yellow-text: #854d0e;
+
+  --green-border: #84cc16;
+  --green-bg: #ecfccb;
+  --green-text: #3f6212;
+
+  --blue-border: #3b82f6;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
+
+  --purple-border: #8b5cf6;
+  --purple-bg: #ede9fe;
+  --purple-text: #5b21b6;
+
+  --pink-border: #ec4899;
+  --pink-bg: #fce7f3;
+  --pink-text: #9d174d;
 }
 
 button:active {
@@ -94,6 +122,48 @@ button {
   height: 100%;
   font-size: 2vw;
   position: relative;
+}
+
+.tile.red {
+  border: 1px solid var(--red-border);
+  background: var(--red-bg);
+  color: var(--red-text);
+}
+
+.tile.orange {
+  border: 1px solid var(--orange-border);
+  background: var(--orange-bg);
+  color: var(--orange-text);
+}
+
+.tile.yellow {
+  border: 1px solid var(--yellow-border);
+  background: var(--yellow-bg);
+  color: var(--yellow-text);
+}
+
+.tile.green {
+  border: 1px solid var(--green-border);
+  background: var(--green-bg);
+  color: var(--green-text);
+}
+
+.tile.blue {
+  border: 1px solid var(--blue-border);
+  background: var(--blue-bg);
+  color: var(--blue-text);
+}
+
+.tile.purple {
+  border: 1px solid var(--purple-border);
+  background: var(--purple-bg);
+  color: var(--purple-text);
+}
+
+.tile.pink {
+  border: 1px solid var(--pink-border);
+  background: var(--pink-bg);
+  color: var(--pink-text);
 }
 
 .tile > p {
@@ -297,11 +367,30 @@ button {
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 .edit-menu > p > span {
   font-weight: bold;
   text-transform: capitalize;
+}
+
+.color-swatches {
+  display: flex;
+  gap: 10px;
+}
+
+.color-swatches > button {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: none;
+}
+
+.color-swatches > .selected {
+  border: 2px solid var(--surface-text);
 }
 
 input {

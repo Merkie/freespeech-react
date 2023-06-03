@@ -16,9 +16,9 @@ const TileGrid = (props: {
       }}
       className="tile-grid"
     >
-      {props.tiles.map((tile) => (
-        <Tile key={JSON.stringify(tile)} {...tile} />
-      ))}
+      {props.tiles.map((tile) =>
+        tile.deleted ? null : <Tile key={JSON.stringify(tile)} {...tile} />
+      )}
     </div>
   );
 };
